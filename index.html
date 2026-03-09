@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CI/CD Deployment Demo</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-effects">
+    <div class="glow glow-1"></div>
+    <div class="glow glow-2"></div>
+  </div>
+  
+  <div class="container">
+    <header class="header">
+      <div class="badge">🚀 v1.0.0 Live</div>
+      <h1>Continuous Deployment <span class="highlight">Demo</span></h1>
+      <p class="description">
+        Dự án Node.js siêu mượt demo quy trình CI/CD. Giao diện này đã được tự động Test (CI) bằng GitHub Actions và sẵn sàng để tự động Triển khai (CD).
+      </p>
+    </header>
+
+    <div class="bento-box">
+      <!-- Card 1: Features -->
+      <div class="card card-features">
+        <div class="card-icon">✨</div>
+        <h3>Tính năng Core</h3>
+        <ul class="feature-list">
+          <li><span class="check">✓</span> Tech Stack: Node.js + Express</li>
+          <li><span class="check">✓</span> Github Actions CI Pipeline</li>
+          <li><span class="check">✓</span> 100% Test Coverage (Jest)</li>
+          <li><span class="check">✓</span> Giao diện UI/UX hiện đại</li>
+        </ul>
+      </div>
+
+      <!-- Card 2: Status Indicator -->
+      <div class="card card-status">
+        <div class="status-ring">
+          <div class="circle pulse-animation"></div>
+        </div>
+        <h3>Hệ thống hoạt động</h3>
+        <p class="status-text text-green" id="server-status">Đang lấy dữ liệu backend...</p>
+        <button id="ping-btn" class="btn-primary">Kiểm tra kết nối API</button>
+      </div>
+      
+      <!-- Card 3: The "KhoGa" Test Case display -->
+      <div class="card card-test">
+        <div class="card-icon">🍗</div>
+        <h3>Test Case Đơn Giản</h3>
+        <p class="test-desc">Code này đã vươt qua bài test tìm từ khóa "KhoGa" trong chuỗi văn bản.</p>
+        <div class="code-block">
+          <code>expect(document.includes("KhoGa")).toBe(true);</code>
+        </div>
+      </div>
+    </div>
+    
+    <footer class="footer">
+      <p>Sẵn sàng để đưa đường link này cho mọi người bấm vào! 🎉</p>
+    </footer>
+  </div>
+
+  <script>
+    const pingBtn = document.getElementById('ping-btn');
+    const statusText = document.getElementById('server-status');
+    const statusCircle = document.querySelector('.circle');
+
+    pingBtn.addEventListener('click', async () => {
+      pingBtn.disabled = true;
+      pingBtn.textContent = "Đang kiểm tra...";
+      statusText.textContent = "Đang gửi Request ⚡";
+      statusText.className = "status-text text-yellow";
+      statusCircle.className = "circle loading-animation";
+
+      try {
+        const res = await fetch('/api/status');
+        const data = await res.json();
+        
+        setTimeout(() => {
+          statusText.textContent = `Thành công: ${data.message}`;
+          statusText.className = "status-text text-green";
+          statusCircle.className = "circle pulse-animation";
+          pingBtn.disabled = false;
+          pingBtn.textContent = "Kiểm tra kết nối API";
+        }, 800);
+      } catch (err) {
+        setTimeout(() => {
+          statusText.textContent = "Lỗi: Không kết nối được Server";
+          statusText.className = "status-text text-red";
+          statusCircle.className = "circle pulse-animation-red";
+          pingBtn.disabled = false;
+          pingBtn.textContent = "Thử lại";
+        }, 800);
+      }
+    });
+    
+    // Auto ping on load
+    setTimeout(() => pingBtn.click(), 500);
+  </script>
+</body>
+</html>
